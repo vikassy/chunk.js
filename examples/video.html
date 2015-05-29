@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Images download</title>
+	<script type="text/javascript" src="../src/chunk.js"></script>
+</head>
+<body>
+
+<video width="320" height="240" id="video" controls>
+  Your browser does not support the video tag.
+</video>
+
+<script type="text/javascript">
+
+window["count"] = 0;
+window["video_hash"] = {};
+
+function process_part(connections, response, chunk_name){
+  window["video_hash"][chunk_name] = response;
+  if (chunk_name == "chunk1")
+  {
+    videoSource.appendBuffer(response);
+    window["count"] = 2;
+  }
+}
+
+var mediaSource = new (window.MediaSource || window.WebKitMediaSource)();
+window.video = document.getElementById('video');
+window.video.addEventListener("error", function onError(err) {
+  console.log("window.video error detected:");
+  console.dir(window.video.error);
+  window.video.terminate();
+}); 
+window.video.pause();
+window.video.src = URL.createObjectURL(mediaSource);
+
+var onMediaSourceOpen = function (e) {
+  mediaSource.removeEventListener('sourceopen', onMediaSourceOpen);
+  window.videoSource = mediaSource.addSourceBuffer('video/webm; codecs="vorbis,vp8"');
+      videoSource.addEventListener('updateend', function() {
+          if ((window["video_hash"])[("chunk" + window["count"])] != undefined) {
+              videoSource.appendBuffer(window["video_hash"]["chunk"+window["count"]]);
+              window["count"] += 1;
+          }
+      }, false);
+  injectVideoIntoBuffer();
+}
+
+mediaSource.addEventListener('sourceopen', onMediaSourceOpen);
+
+var injectVideoIntoBuffer = function onResponse() {
+  var url = window.location.hash.split("#")[1];
+  chunk = new Chunk("../data/79.webm", 3, process_part);
+  chunk.download();
+}
+
+function check_timeout(something){
+  videoSource.appendBuffer(window["response2"]);
+  if (window["count"] == 3)
+  {
+    window["count"] = 0;
+    videoSource.appendBuffer(window["response2"]);
+  }
+  else{
+    console.log("here in count = "+ window["count"]);
+    window["count"] += 1;
+  }
+}
+
+</script>
+</body>
+</html>

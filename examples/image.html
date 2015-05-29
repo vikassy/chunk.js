@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Images download</title>
+	<script type="text/javascript" src="../src/chunk.js"></script>
+</head>
+<body>
+
+<img id="image" />
+
+<script type="text/javascript">
+window["position"] = 1;
+
+function image(connections, response, chunk_name) {
+	window["b64"+chunk_name] = btoa(get_string(response));
+
+	for (var i = window["position"]; i <= connections; i++) {
+		try
+		{
+			if (window['b64chunk'+i] == "" || window['b64chunk'+i] == undefined)
+  				return ;
+  			else
+  			{
+  				if (i == 1)
+  					document.getElementById("image").src = "data:image/png;base64," + window["b64chunk1"];
+  				else
+  					document.getElementById("image").src += window["b64chunk"+i];
+  				window["position"] += 1;
+  			}
+  		}
+	  	catch(err) {
+	  		return ;
+	  	}
+	}
+}
+
+
+function get_string(content)
+{
+  var length = content.length;
+  var string = "";
+  for(var i=0;i< length;i++)
+  {
+    string += String.fromCharCode(content[i]);
+  }
+  return string
+}
+
+chunk = new Chunk("../data/4.jpg", 3, image);
+chunk.download();
+</script>
+</body>
+</html>
