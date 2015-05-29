@@ -17,6 +17,7 @@ window["video_hash"] = {};
 
 function process_part(connections, response, chunk_name){
   window["video_hash"][chunk_name] = response;
+  console.log("GOt chuck"+ chunk_name)
   if (chunk_name == "chunk1")
   {
     videoSource.appendBuffer(response);
@@ -38,8 +39,9 @@ var onMediaSourceOpen = function (e) {
   mediaSource.removeEventListener('sourceopen', onMediaSourceOpen);
   window.videoSource = mediaSource.addSourceBuffer('video/webm; codecs="vorbis,vp8"');
       videoSource.addEventListener('updateend', function() {
-          if ((window["video_hash"])[("chunk" + window["count"])] != undefined) {
-              videoSource.appendBuffer(window["video_hash"]["chunk"+window["count"]]);
+          if (window["video_hash"]["chunk" + window["count"]] != undefined) {
+              videoSource.appendBuffer(window["video_hash"]["chunk" + window["count"]]);
+              console.log("Appended chunk"+ window["count"])
               window["count"] += 1;
           }
       }, false);
