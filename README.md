@@ -25,8 +25,9 @@ To download the image data you need to cal download function on chunk instance.
 
 ### To download specific part of resource. 
 
-``` image_middle_part = new Chunk("/data/4.jpg", [1200, 3200], each_chunk_callback);
+```
+image_middle_part = new Chunk("/data/4.jpg", [1200, 3200], each_chunk_callback);
 image_midlle_part.download();
 ```
 
-Look into examples folder for more information. 
+Look into examples folder for more information.
