@@ -17,6 +17,7 @@ var Chunk = function(resource, connections, callback){
     this.initialize(connections, 0, 0)
     this.len(resource);
   }
+  this.async = true;
   this.source = resource;
   this.each_chunk_callback = callback;
 }
@@ -73,7 +74,7 @@ Chunk.prototype.download_from_connections = function() {
 Chunk.prototype.get_part = function(start_index, end_index, chunk_index) {
   console.log("bytes=" + start_index + "-" + end_index);
   var xmlhttp = new XMLHttpRequest();
-  xmlhttp.open("GET", this.source, true);
+  xmlhttp.open("GET", this.source, this.async);
   xmlhttp.responseType = 'arraybuffer';
   xmlhttp.setRequestHeader("Range", "bytes=" + start_index + "-" + end_index);
 
